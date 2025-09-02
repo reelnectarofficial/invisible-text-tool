@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invisible Text Revealer | ReelTools</title>
+  <meta name="description" content="Reveal hidden or white-colored text from pasted content. Useful for detecting invisible formatting tricks." />
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Invisible Text Revealer</h1>
+    <!-- 🔝 Top Banner Ad -->
+    <!-- Insert AdSense / Adsterra banner ad code here -->
+  </header>
+
+  <main>
+    <div class="sidebar">
+      <!-- 📌 Sidebar Ad -->
+      <!-- Insert sidebar ad code here -->
+    </div>
+
+    <section class="tool-section">
+      <p>Paste the suspicious or formatted text below. We'll reveal any hidden or white-colored characters.</p>
+      <textarea id="inputText" placeholder="Paste your text here..." rows="6"></textarea>
+      <button onclick="revealText()">Reveal Hidden Text</button>
+
+      <!-- 🧠 Native Ad -->
+      <div class="native-ad">
+        <!-- Insert native ad code here -->
+      </div>
+
+      <div class="result" id="resultSection" style="display:none;">
+        <h3>Revealed Text</h3>
+        <pre id="revealedText"></pre>
+        <button onclick="copyText()">Copy</button>
+        <button onclick="downloadText()">Download</button>
+        <button onclick="shareText()">Share</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <!-- 📉 Bottom Ad -->
+    <!-- Insert bottom ad code here -->
+    <p>&copy; <span id="year"></span> ReelTools. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    function revealText() {
+      const input = document.getElementById('inputText').value;
+      const revealed = input.replace(/\u200B|\u200C|\u200D|\u2060/g, '[INVISIBLE]').replace(/\s{2,}/g, ' ');
+      document.getElementById('revealedText').textContent = revealed || '[No hidden text found]';
+      document.getElementById('resultSection').style.display = 'block';
+    }
+
+    function copyText() {
+      const text = document.getElementById('revealedText').textContent;
+      navigator.clipboard.writeText(text);
+      alert('Text copied!');
+    }
+
+    function downloadText() {
+      const text = document.getElementById('revealedText').textContent;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'revealed-text.txt';
+      link.click();
+    }
+
+    function shareText() {
+      const text = document.getElementById('revealedText').textContent;
+      if (navigator.share) {
+        navigator.share({ text });
+      } else {
+        alert('Sharing not supported on this device.');
+      }
+    }
+  </script>
+</body>
+</html>
