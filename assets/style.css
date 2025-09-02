@@ -1,0 +1,97 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f9f9f9;
+  color: #333;
+}
+
+header, footer {
+  background: #222;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+}
+
+main {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1rem;
+}
+
+.sidebar {
+  flex: 1 1 200px;
+  margin-right: 1rem;
+}
+
+.tool-section {
+  flex: 3 1 600px;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.tool-list {
+  width: 100%;
+  padding: 1rem;
+}
+
+.tool-card {
+  background: #fff;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-left: 5px solid #007bff;
+  border-radius: 6px;
+}
+
+.tool-card a {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #007bff;
+  text-decoration: none;
+}
+
+textarea {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+.result {
+  margin-top: 1rem;
+}
+
+.native-ad, .ads-top, .ads-bottom, .ads-sidebar {
+  margin: 1rem 0;
+  background: #eee;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  main {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    margin-right: 0;
+  }
+}
