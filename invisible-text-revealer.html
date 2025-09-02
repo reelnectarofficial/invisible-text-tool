@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Invisible Text Revealer | ReelTools</title>
-  <meta name="description" content="Reveal hidden or white-colored text from pasted content. Useful for detecting invisible formatting tricks." />
+  <title>Invisible Text Tool | ReelTools</title>
+  <meta name="description" content="Reveal hidden characters or create invisible messages using zero-width Unicode. Perfect for pranks, formatting, and secret sharing." />
   <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
   <header>
-    <h1>Invisible Text Revealer</h1>
+    <h1>Invisible Text Tool</h1>
+    <p>Reveal hidden characters or generate invisible messages</p>
     <!-- 🔝 Top Banner Ad -->
     <!-- Insert AdSense / Adsterra banner ad code here -->
   </header>
@@ -21,21 +22,36 @@
     </div>
 
     <section class="tool-section">
-      <p>Paste the suspicious or formatted text below. We'll reveal any hidden or white-colored characters.</p>
-      <textarea id="inputText" placeholder="Paste your text here..." rows="6"></textarea>
-      <button onclick="revealText()">Reveal Hidden Text</button>
+      <h2>🔍 Reveal Hidden Characters</h2>
+      <textarea id="inputText" placeholder="Paste suspicious or formatted text here..." rows="6"></textarea>
+      <button onclick="revealText()">Reveal</button>
 
-      <!-- 🧠 Native Ad -->
       <div class="native-ad">
+        <!-- 🧠 Native Ad -->
         <!-- Insert native ad code here -->
       </div>
 
-      <div class="result" id="resultSection" style="display:none;">
+      <div class="result" id="revealResult" style="display:none;">
         <h3>Revealed Text</h3>
         <pre id="revealedText"></pre>
-        <button onclick="copyText()">Copy</button>
-        <button onclick="downloadText()">Download</button>
-        <button onclick="shareText()">Share</button>
+        <p id="charCount"></p>
+        <button onclick="copyText('revealedText')">Copy</button>
+        <button onclick="downloadText('revealedText')">Download</button>
+        <button onclick="shareText('revealedText')">Share</button>
+      </div>
+
+      <hr />
+
+      <h2>🕵️‍♂️ Generate Hidden Message</h2>
+      <textarea id="hiddenInput" placeholder="Type your secret message..." rows="4"></textarea>
+      <button onclick="generateHidden()">Generate</button>
+
+      <div class="result" id="hiddenResult" style="display:none;">
+        <h3>Invisible Message</h3>
+        <pre id="hiddenOutput"></pre>
+        <button onclick="copyText('hiddenOutput')">Copy</button>
+        <button onclick="downloadText('hiddenOutput')">Download</button>
+        <button onclick="shareText('hiddenOutput')">Share</button>
       </div>
     </section>
   </main>
@@ -51,28 +67,43 @@
 
     function revealText() {
       const input = document.getElementById('inputText').value;
-      const revealed = input.replace(/\u200B|\u200C|\u200D|\u2060/g, '[INVISIBLE]').replace(/\s{2,}/g, ' ');
-      document.getElementById('revealedText').textContent = revealed || '[No hidden text found]';
-      document.getElementById('resultSection').style.display = 'block';
+      let output = input
+        .replace(/\u200B/g, '[ZWSP]')
+        .replace(/\u200C/g, '[ZWNJ]')
+        .replace(/\u200D/g, '[ZWJ]')
+        .replace(/\u2060/g, '[WJ]')
+        .replace(/\s{2,}/g, ' ');
+
+      const count = (input.match(/\u200B|\u200C|\u200D|\u2060/g) || []).length;
+      document.getElementById('revealedText').textContent = output || '[No hidden characters found]';
+      document.getElementById('charCount').textContent = `Invisible characters found: ${count}`;
+      document.getElementById('revealResult').style.display = 'block';
     }
 
-    function copyText() {
-      const text = document.getElementById('revealedText').textContent;
+    function generateHidden() {
+      const input = document.getElementById('hiddenInput').value;
+      const encoded = input.split('').map(char => char + '\u200B').join('');
+      document.getElementById('hiddenOutput').textContent = encoded;
+      document.getElementById('hiddenResult').style.display = 'block';
+    }
+
+    function copyText(id) {
+      const text = document.getElementById(id).textContent;
       navigator.clipboard.writeText(text);
       alert('Text copied!');
     }
 
-    function downloadText() {
-      const text = document.getElementById('revealedText').textContent;
+    function downloadText(id) {
+      const text = document.getElementById(id).textContent;
       const blob = new Blob([text], { type: 'text/plain' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = 'revealed-text.txt';
+      link.download = 'text.txt';
       link.click();
     }
 
-    function shareText() {
-      const text = document.getElementById('revealedText').textContent;
+    function shareText(id) {
+      const text = document.getElementById(id).textContent;
       if (navigator.share) {
         navigator.share({ text });
       } else {
