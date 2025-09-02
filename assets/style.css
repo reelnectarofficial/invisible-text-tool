@@ -95,3 +95,20 @@ button:hover {
     margin-right: 0;
   }
 }
+.output-box {
+  background: #fefefe;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 1rem;
+}
+
+.highlight {
+  background: #ffeeba;
+  color: #333;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-weight: bold;
+  cursor: help;
+}
