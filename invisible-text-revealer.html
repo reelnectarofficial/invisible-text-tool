@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Invisible Text Tool | ReelTools</title>
-  <meta name="description" content="Reveal hidden characters or create invisible messages using zero-width Unicode. Perfect for pranks, formatting, and secret sharing." />
+  <meta name="description" content="Reveal hidden Unicode characters or generate invisible messages. Detect ZWSP, ZWNJ, and more. Perfect for formatting, pranks, and debugging." />
   <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
@@ -33,7 +33,7 @@
 
       <div class="result" id="revealResult" style="display:none;">
         <h3>Revealed Text</h3>
-        <pre id="revealedText"></pre>
+        <div id="revealedText" class="output-box"></div>
         <p id="charCount"></p>
         <button onclick="copyText('revealedText')">Copy</button>
         <button onclick="downloadText('revealedText')">Download</button>
@@ -66,34 +66,33 @@
     document.getElementById('year').textContent = new Date().getFullYear();
 
     function revealText() {
-  const input = document.getElementById('inputText').value;
-  const map = {
-    '\u200B': { label: 'ZWSP', code: 'U+200B' },
-    '\u200C': { label: 'ZWNJ', code: 'U+200C' },
-    '\u200D': { label: 'ZWJ', code: 'U+200D' },
-    '\u2060': { label: 'WJ', code: 'U+2060' },
-    '\u00A0': { label: 'NBSP', code: 'U+00A0' },
-    '\u202F': { label: 'NNBSP', code: 'U+202F' },
-    '\uFEFF': { label: 'BOM', code: 'U+FEFF' }
-  };
+      const input = document.getElementById('inputText').value;
+      const map = {
+        '\u200B': { label: 'ZWSP', code: 'U+200B' },
+        '\u200C': { label: 'ZWNJ', code: 'U+200C' },
+        '\u200D': { label: 'ZWJ', code: 'U+200D' },
+        '\u2060': { label: 'WJ', code: 'U+2060' },
+        '\u00A0': { label: 'NBSP', code: 'U+00A0' },
+        '\u202F': { label: 'NNBSP', code: 'U+202F' },
+        '\uFEFF': { label: 'BOM', code: 'U+FEFF' }
+      };
 
-  let output = '';
-  let count = 0;
+      let output = '';
+      let count = 0;
 
-  for (let char of input) {
-    if (map[char]) {
-      output += `<span class="highlight" title="${map[char].label} (${map[char].code})">${map[char].label}</span>`;
-      count++;
-    } else {
-      output += char;
+      for (let char of input) {
+        if (map[char]) {
+          output += `<span class="highlight" title="${map[char].label} (${map[char].code})">${map[char].label}</span>`;
+          count++;
+        } else {
+          output += char;
+        }
+      }
+
+      document.getElementById('revealedText').innerHTML = output || '[No hidden characters found]';
+      document.getElementById('charCount').textContent = `Invisible characters found: ${count}`;
+      document.getElementById('revealResult').style.display = 'block';
     }
-  }
-
-  document.getElementById('revealedText').innerHTML = output || '[No hidden characters found]';
-  document.getElementById('charCount').textContent = `Invisible characters found: ${count}`;
-  document.getElementById('revealResult').style.display = 'block';
-}
-
 
     function generateHidden() {
       const input = document.getElementById('hiddenInput').value;
@@ -103,13 +102,13 @@
     }
 
     function copyText(id) {
-      const text = document.getElementById(id).textContent;
+      const text = document.getElementById(id).textContent || document.getElementById(id).innerText;
       navigator.clipboard.writeText(text);
       alert('Text copied!');
     }
 
     function downloadText(id) {
-      const text = document.getElementById(id).textContent;
+      const text = document.getElementById(id).textContent || document.getElementById(id).innerText;
       const blob = new Blob([text], { type: 'text/plain' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
@@ -118,7 +117,7 @@
     }
 
     function shareText(id) {
-      const text = document.getElementById(id).textContent;
+      const text = document.getElementById(id).textContent || document.getElementById(id).innerText;
       if (navigator.share) {
         navigator.share({ text });
       } else {
