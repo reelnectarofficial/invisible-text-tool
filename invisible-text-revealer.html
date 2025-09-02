@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Invisible Text Tool | ReelTools</title>
-  <meta name="description" content="Reveal hidden Unicode characters or generate invisible messages. Detect ZWSP, ZWNJ, and more. Perfect for formatting, pranks, and debugging." />
+  <meta name="description" content="Reveal hidden Unicode characters or generate invisible messages. Detect ZWSP, ZWNJ, and more. Clean formatting, debug copy-paste issues, or prank with stealth text." />
   <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
   <header>
     <h1>Invisible Text Tool</h1>
-    <p>Reveal hidden characters or generate invisible messages</p>
+    <p>Reveal hidden characters, clean formatting, or generate stealth messages</p>
     <!-- 🔝 Top Banner Ad -->
     <!-- Insert AdSense / Adsterra banner ad code here -->
   </header>
@@ -23,8 +23,9 @@
 
     <section class="tool-section">
       <h2>🔍 Reveal Hidden Characters</h2>
+      <label><input type="checkbox" id="showSpaces" onchange="revealText()"> Show spaces visually</label>
+      <button onclick="cleanText()">🧹 Clean Invisible Characters</button>
       <textarea id="inputText" placeholder="Paste suspicious or formatted text here..." rows="6"></textarea>
-      <button onclick="revealText()">Reveal</button>
 
       <div class="native-ad">
         <!-- 🧠 Native Ad -->
@@ -40,6 +41,15 @@
         <button onclick="shareText('revealedText')">Share</button>
       </div>
 
+      <div class="legend">
+        <h4>Character Legend</h4>
+        <button onclick="copyChar('\u200B')">ZWSP</button>
+        <button onclick="copyChar('\u200C')">ZWNJ</button>
+        <button onclick="copyChar('\u200D')">ZWJ</button>
+        <button onclick="copyChar('\u2060')">WJ</button>
+        <button onclick="copyChar('\uFEFF')">BOM</button>
+      </div>
+
       <hr />
 
       <h2>🕵️‍♂️ Generate Hidden Message</h2>
@@ -53,6 +63,20 @@
         <button onclick="downloadText('hiddenOutput')">Download</button>
         <button onclick="shareText('hiddenOutput')">Share</button>
       </div>
+
+      <hr />
+
+      <h2>📘 What Are Invisible Characters?</h2>
+      <p>Invisible characters are Unicode symbols that don’t show up visually, but still affect how text behaves. They’re used for:</p>
+      <ul>
+        <li>Blank usernames or messages (e.g. ZWSP, NBSP)</li>
+        <li>Precise formatting in design/code (e.g. WJ, ZWNJ)</li>
+        <li>Bypassing filters or validation (e.g. SHY, BOM)</li>
+        <li>Fingerprinting AI-generated content</li>
+      </ul>
+
+      <h3>⚠️ Why Detection Matters</h3>
+      <p>Invisible characters can break search, copy/paste, or code. They may hide malicious content, bypass filters, or manipulate URLs. Always sanitize user input and validate text before processing.</p>
     </section>
   </main>
 
@@ -64,17 +88,18 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('inputText').addEventListener('input', revealText);
 
     function revealText() {
       const input = document.getElementById('inputText').value;
+      const showSpaces = document.getElementById('showSpaces').checked;
       const map = {
         '\u200B': { label: 'ZWSP', code: 'U+200B' },
         '\u200C': { label: 'ZWNJ', code: 'U+200C' },
         '\u200D': { label: 'ZWJ', code: 'U+200D' },
         '\u2060': { label: 'WJ', code: 'U+2060' },
-        '\u00A0': { label: 'NBSP', code: 'U+00A0' },
-        '\u202F': { label: 'NNBSP', code: 'U+202F' },
-        '\uFEFF': { label: 'BOM', code: 'U+FEFF' }
+        '\uFEFF': { label: 'BOM', code: 'U+FEFF' },
+        '\u00A0': { label: 'NBSP', code: 'U+00A0' }
       };
 
       let output = '';
@@ -84,6 +109,8 @@
         if (map[char]) {
           output += `<span class="highlight" title="${map[char].label} (${map[char].code})">${map[char].label}</span>`;
           count++;
+        } else if (char === ' ' && showSpaces) {
+          output += `<span class="space" title="Space">•</span>`;
         } else {
           output += char;
         }
@@ -94,9 +121,17 @@
       document.getElementById('revealResult').style.display = 'block';
     }
 
+    function cleanText() {
+      const input = document.getElementById('inputText').value;
+      const cleaned = input.replace(/[\u200B\u200C\u200D\u2060\uFEFF\u00A0]/g, '');
+      document.getElementById('inputText').value = cleaned;
+      alert('Invisible characters removed!');
+      revealText();
+    }
+
     function generateHidden() {
       const input = document.getElementById('hiddenInput').value;
-      const encoded = input.split('').map(char => char + '\u200B').join('');
+      const encoded = input.split('').map(char => char + '\u200B\u2060').join('');
       document.getElementById('hiddenOutput').textContent = encoded;
       document.getElementById('hiddenResult').style.display = 'block';
     }
@@ -123,6 +158,11 @@
       } else {
         alert('Sharing not supported on this device.');
       }
+    }
+
+    function copyChar(char) {
+      navigator.clipboard.writeText(char);
+      alert('Character copied!');
     }
   </script>
 </body>
